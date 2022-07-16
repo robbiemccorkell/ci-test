@@ -3,6 +3,11 @@ on:
   push:
     tags:
       - "v*"
+  workflow_run:
+    workflows: ["tag"]
+    branches: [main]
+    types:
+      - completed
 jobs:
   deploy:
     name: Deploy
