@@ -3,44 +3,54 @@ on:
   push:
     tags:
       - "v*"
-  workflow_run:
-    workflows: [tag]
-    branches: [main]
-    types:
-      - completed
   workflow_dispatch:
+    level:
+      type: choice
+      description: Semver level to create a tag for
+      required: false
+      default: patch
+      options:
+        - major
+        - minor
+        - patch
     inputs:
       tag:
-        description: Git tag to release
-        required: true
+        description: Existing tag to release
+        required: false
 
 jobs:
   deploy:
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
+      - name: Create tag
+        id: create_tag
+        if: ${{ !startsWith(github.event.inputs.tag, 'v') && !startsWith(github.ref, 'refs/tags/') }}
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ github.event.inputs.level }}
       - name: Get tag
         id: get_tag
         run: |
-          git fetch --tags --quiet
           input_tag=${{ github.event.inputs.tag }}
+          created_tag=${{ steps.create_tag.new_tag }}
           event_tag=${{ github.event.ref }}
-          latest_tag=$(git describe --tags --abbrev=0)
-          
-          # If input tag not defined use event tag
-          deploy_tag="${input_tag:-$event_tag}"
-          
-          # If event tag not defined use latest tag
-          deploy_tag="${deploy_tag:-$latest_tag}"
-          
+
+          # Use input tag or created tag
+          deploy_tag="${input_tag:-$created_tag}"
+
+          # If created tag not defined use event tag
+          deploy_tag="${deploy_tag:-$event_tag}"
+
           echo "Input tag: $input_tag"
+          echo "Created tag: $created_tag"
           echo "Event tag: $event_tag"
-          echo "Latest tag: $latest_tag"
           echo "Deploy tag: $deploy_tag"
 
           git checkout --quiet $deploy_tag
 
-          echo "::set-output name=deploy_tag::$deploy_tag"
+          echo "::set-output name=deploy_tag::${deploy_tag}"
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
