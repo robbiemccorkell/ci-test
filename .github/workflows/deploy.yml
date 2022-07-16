@@ -8,12 +8,20 @@ on:
     branches: [main]
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to release
+        required: true
+
 jobs:
   deploy:
     name: Deploy
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.tag }}
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
