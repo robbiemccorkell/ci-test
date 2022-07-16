@@ -14,3 +14,8 @@ jobs:
         run: deno lint
       - name: Test
         run: deno test
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
