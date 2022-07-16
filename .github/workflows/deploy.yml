@@ -22,23 +22,17 @@ jobs:
       - name: Get tag
         id: get_tag
         run: |
-          git fetch --tags --quiet
           input_tag=${{ github.event.inputs.tag }}
           event_tag=${{ github.event.ref }}
-          latest_tag=$(git describe --tags --abbrev=0)
           
           # If input tag not defined use event tag
           deploy_tag="${input_tag:-$event_tag}"
           
-          # If event tag not defined use latest tag
-          deploy_tag="${deploy_tag:-$latest_tag}"
-          
           echo "Input tag: $input_tag"
-          echo "Latest tag: $latest_tag"
-          echo "Event tag: $latest_tag"
+          echo "Event tag: $event_tag"
           echo "Deploy tag: $deploy_tag"
 
-          git checkout $deploy_tag
+          git checkout --quiet $deploy_tag
 
           echo "::set-output name=deploy_tag::$deploy_tag"
       - uses: denoland/setup-deno@v1
