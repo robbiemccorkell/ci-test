@@ -22,6 +22,7 @@ jobs:
       - name: Get tag
         id: get_tag
         run: |
+          git fetch --tags --quiet
           input_tag=${{ github.event.inputs.tag }}
           event_tag=${{ github.event.ref }}
           
@@ -52,6 +53,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
-          files: dist
+          files: dist/**
           tag_name: ${{ steps.get_tag.outputs.deploy_tag }}
           generate_release_notes: true
