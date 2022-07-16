@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,11 +16,3 @@ jobs:
         run: deno test
       - name: Build
         run: deno compile -o dist/ci-test index.ts
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            dist
