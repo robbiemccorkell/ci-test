@@ -97,7 +97,7 @@ jobs:
     name: deploy to prod
     environment: prod
     runs-on: "ubuntu-latest"
-    needs: [tag, test]
+    needs: [tag, deploy_test]
     steps:
       - uses: actions/checkout@v3
         with:
