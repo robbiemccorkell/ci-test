@@ -4,7 +4,7 @@ on:
     tags:
       - "v*"
   workflow_run:
-    workflows: ["tag"]
+    workflows: [tag]
     branches: [main]
     types:
       - completed
@@ -20,8 +20,15 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.inputs.tag }}
+      - name: Get tag
+        id: get_tag
+        run: |
+          input_tag=${{ github.event.inputs.tag }}
+          latest_tag=$(git describe --tags --abbrev=0)
+          deploy_tag="${input_tag:-$latest_tag}"
+          echo "Input tag: $input_tag"
+          echo "Latest tag: $latest_tag"
+          echo "Deploy tag: $deploy_tag"
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
@@ -35,6 +42,6 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: ${{ github.event.inputs.tag }}
+          automatic_release_tag: ${{ steps.get_tag.outputs.deploy_tag }}
           files: |
             dist
