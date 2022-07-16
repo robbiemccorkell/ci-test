@@ -30,6 +30,8 @@ jobs:
           echo "Input tag: $input_tag"
           echo "Latest tag: $latest_tag"
           echo "Deploy tag: $deploy_tag"
+
+          echo "::set-output name=deploy_tag::$deploy_tag"
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
