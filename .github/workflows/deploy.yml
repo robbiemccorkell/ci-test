@@ -4,16 +4,16 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
-    level:
-      type: choice
-      description: Semver level to create a tag for
-      required: false
-      default: patch
-      options:
-        - major
-        - minor
-        - patch
     inputs:
+      level:
+        type: choice
+        description: Semver level to create a tag for
+        required: false
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
       tag:
         description: Existing tag to release
         required: false
