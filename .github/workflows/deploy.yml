@@ -28,8 +28,12 @@ jobs:
           # If input tag not defined use event tag
           deploy_tag="${input_tag:-$event_tag}"
           
+          # If event tag not defined use latest tag
+          deploy_tag="${deploy_tag:-$latest_tag}"
+          
           echo "Input tag: $input_tag"
           echo "Event tag: $event_tag"
+          echo "Latest tag: $latest_tag"
           echo "Deploy tag: $deploy_tag"
 
           git checkout --quiet $deploy_tag
