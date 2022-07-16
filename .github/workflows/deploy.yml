@@ -30,6 +30,8 @@ jobs:
           echo "Latest tag: $latest_tag"
           echo "Deploy tag: $deploy_tag"
 
+          git checkout $deploy_tag
+
           echo "::set-output name=deploy_tag::$deploy_tag"
       - uses: denoland/setup-deno@v1
         with:
