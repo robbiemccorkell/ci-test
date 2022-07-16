@@ -34,7 +34,7 @@ jobs:
         id: get_tag
         run: |
           input_tag=${{ github.event.inputs.tag }}
-          created_tag=${{ steps.create_tag.new_tag }}
+          created_tag=${{ steps.create_tag.outputs.new_tag }}
           event_tag=${{ github.event.ref }}
 
           # Use input tag or created tag
