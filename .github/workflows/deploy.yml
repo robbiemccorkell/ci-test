@@ -33,6 +33,8 @@ jobs:
       - name: Get tag
         id: get_tag
         run: |
+          git fetch tags --quiet
+
           input_tag=${{ github.event.inputs.tag }}
           created_tag=${{ steps.create_tag.outputs.new_tag }}
           event_tag=${{ github.event.ref }}
