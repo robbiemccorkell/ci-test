@@ -14,9 +14,13 @@ jobs:
         run: deno lint
       - name: Test
         run: deno test
+      - name: Build
+        run: deno compile -o dist/ci-test index.ts
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
+          files: |
+            dist
