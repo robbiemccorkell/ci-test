@@ -42,10 +42,10 @@ jobs:
         run: deno test
       - name: Build
         run: deno compile -o dist/ci-test index.ts
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Create release
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: ${{ steps.get_tag.outputs.deploy_tag }}
-          files: |
-            dist
+          files: dist
+          tag_name: ${{ steps.get_tag.outputs.deploy_tag }}
+          generate_release_notes: true
